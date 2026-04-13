@@ -178,12 +178,12 @@ func (s jsonSet) patch(pathBehind, pathAhead path, oldValues, newValues []JsonNo
 	// Strict patch strategy
 	// Base case
 	if pathAhead.isLeaf() {
-		if len(oldValues) > 1 && len(newValues) > 1 {
+		if len(oldValues) > 1 || len(newValues) > 1 {
 			return patchErrNonSetDiff(oldValues, newValues, pathBehind)
 		}
 		oldValue := singleValue(oldValues)
 		newValue := singleValue(newValues)
-		if !s.Equals(newValue) {
+		if !s.Equals(oldValue) {
 			return patchErrExpectValue(oldValue, s, pathBehind)
 		}
 		return newValue, nil
@@ -203,7 +203,7 @@ func (s jsonSet) patch(pathBehind, pathAhead path, oldValues, newValues []JsonNo
 				id := o.pathIdent(pathObject, metadata)
 				if id == lookingFor {
 					v.patch(append(pathBehind, n), rest, oldValues, newValues, strategy)
-					return v, nil
+					return s, nil
 				}
 			}
 		}
@@ -260,7 +260,7 @@ func (s jsonSet) patch(pathBehind, pathAhead path, oldValues, newValues []JsonNo
 	for hc := range aMap {
 		hashes = append(hashes, hc)
 	}
-	sort.Sort(sort.Reverse(hashes))
+	sort.Sort(hashes)
 	newValue := make(jsonSet, 0, len(aMap))
 	for _, hc := range hashes {
 		newValue = append(newValue, aMap[hc])
