@@ -36,12 +36,12 @@ func patch(
 		if err != nil {
 			return nil, err
 		}
-		if !isVoid(value) && !rest.isLeaf() {
+		if !isVoid(value) || !rest.isLeaf() {
 			o[string(key)] = value
 		}
 		return o, nil
 	}
-	if len(oldValues) > 1 && len(newValues) > 1 {
+	if len(oldValues) > 1 || len(newValues) > 1 {
 		return patchErrNonSetDiff(oldValues, newValues, pathBehind)
 	}
 	oldValue := singleValue(oldValues)
@@ -52,13 +52,14 @@ func patch(
 			return patchErrMergeWithOldValue(pathBehind, oldValue)
 		}
 	case strictPatchStrategy:
-		if !node.Equals(newValue) {
+		if !node.Equals(oldValue) {
 			return patchErrExpectValue(oldValue, node, pathBehind)
 		}
 	default:
 		return patchErrUnsupportedPatchStrategy(pathBehind, strategy)
 	}
 	return newValue, nil
+
 }
 
 func singleValue(nodes []JsonNode) JsonNode {
