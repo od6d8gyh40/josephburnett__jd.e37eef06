@@ -142,7 +142,7 @@ func (o1 jsonObject) diff(n JsonNode, path path, metadata []Metadata, strategy p
 		switch strategy {
 		case mergePatchStrategy:
 			e = DiffElement{
-				Path:      path.clone(),
+				Path:      path.clone().prependMetadataMerge(),
 				NewValues: []JsonNode{n},
 			}
 		default:
@@ -177,7 +177,7 @@ func (o1 jsonObject) diff(n JsonNode, path path, metadata []Metadata, strategy p
 			case mergePatchStrategy:
 				e = DiffElement{
 					Path:      append(path, jsonString(k1)).clone().prependMetadataMerge(),
-					NewValues: nodeList(v1),
+					NewValues: []JsonNode{voidNode{}},
 				}
 			default:
 				e = DiffElement{
@@ -204,7 +204,7 @@ func (o1 jsonObject) diff(n JsonNode, path path, metadata []Metadata, strategy p
 			default:
 				e = DiffElement{
 					Path:      append(path, jsonString(k2)).clone(),
-					OldValues: nodeList(v2),
+					OldValues: nodeList(),
 					NewValues: nodeList(v2),
 				}
 			}
